@@ -120,8 +120,14 @@ $subl = if ($subl) {$subl} else {
     Join-Path $installPath $sublPath | ?{Test-Path $_} | Select -First 1
 }
 
-# New-Alias subl Invoke-SublimeText
-New-Alias sublime Invoke-SublimeText
-
 Export-ModuleMember -Function Invoke-SublimeText
-Export-ModuleMember -Alias sublime
+
+if (-not (Get-Command sublime -ErrorAction SilentlyContinue)) {
+    New-Alias sublime Invoke-SublimeText
+    Export-ModuleMember -Alias sublime
+}
+
+if (-not (Get-Command subl -ErrorAction SilentlyContinue)) {
+    New-Alias subl Invoke-SublimeText
+    Export-ModuleMember -Alias subl
+}
