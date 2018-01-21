@@ -6,7 +6,8 @@
 #>
 
 param(
-    $subl = 'C:\Program Files\Sublime Text 3\subl.exe'
+    # Override posubl's attempts at working out Sublime Text's location.
+    $subl
     )
 
 function Invoke-SublimeText {
@@ -98,6 +99,25 @@ function Invoke-SublimeText {
     end {
         & $subl $arguments
     }
+}
+
+
+$subl = if ($subl) {$subl} else {
+    $installPath = ''
+    $sublPath = ''
+    if ($isMacOS) {
+        $installPath = "~/Applications","/Applications"
+        $sublPath = 'Sublime Text.app/Contents/SharedSupport/bin/subl'
+    } elseif ($isLinux) {
+        #sublimetext.info docs suggest these
+        $installPath = '/opt/Sublime Text 3'
+        $sublPath = 'sublime_text'
+    } else {
+        # It's probably Windows
+        $installPath = $env:ProgramFiles,${env:ProgramFiles(x86)}
+        $sublPath = 'Sublime Text 3\subl.exe'
+    }
+    Join-Path $installPath $sublPath | ?{Test-Path $_} | Select -First 1
 }
 
 # New-Alias subl Invoke-SublimeText
