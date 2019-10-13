@@ -1,0 +1,17 @@
+strategy:
+  matrix:
+    windows:
+      imageName: 'windows-latest'
+    macOS:
+      imageName: 'macOS-latest'
+    Linux:
+      imageName: 'ubuntu-latest'
+
+pool:
+  vmImage: $(imageName)
+
+steps:
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: 'Import-Module ./posubl.psd1'
